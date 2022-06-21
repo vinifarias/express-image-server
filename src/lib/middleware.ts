@@ -1,7 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { promises as fsPromises } from 'fs';
-import * as path from 'path'
-import sharp from 'sharp';
+import path from 'path'
 
 import ImageTransformer from './ImageTransformer'
 import StorageClient from './StorageClients/StorageClient'
@@ -17,39 +15,25 @@ interface optsType {
 
 export function createMiddleware(opts: optsType) {
   return async function imageMiddleware(req: Request, res: Response, next: NextFunction) {
+    // Adapt to another image types
+    res.set('Content-Type', 'image/jpg')
+
     const queryParams: QueryParams = req.query as unknown as QueryParams
 
-    /**
-     * let image = ''
-     * if(image in cache) {
-     *   image = ...image saved in cache
-     * }
-     * else {
-     *  image = await storageClient.getImage(imageId)
-     * }
-     *
-     * const imageTransformed = await imageTransformer.transform(image)
-     *
-     * storageClient.save({
-     *   'name': blabla,
-     *   'id': blabla,
-     *   ...
-     * }, imageTransformed)
-     *
-     * return imageTransformed
-     */
-
-    console.log('BASE URL: ', req.baseUrl)
-    console.log('PARAMS: ', req.params)
-    console.log('PATH: ', req.path)
-    console.log('QUERY: ', req.query)
-    console.log('PARSED QUERY: ', queryParams)
     const imageName = req.params.id
+    const newImageName = generateImageName(imageName, queryParams)
 
     const imageTransformer = new ImageTransformer()
     const storageClient = opts.storageClient
 
-    // Get image from storage client
+    // Check if the processed image already exist in storage
+    if (await storageClient.imageExists(newImageName)) {
+      const image = await storageClient.getImage(newImageName)
+      res.send(image)
+      return
+    }
+
+    // Get the image from storage
     const image = await storageClient.getImage(imageName)
 
     // Process the image
@@ -57,9 +41,29 @@ export function createMiddleware(opts: optsType) {
 
     // Save the image
     if (transformedImage) {
-      storageClient.saveImage("image-transformed.png", transformedImage)
+      storageClient.saveImage(newImageName, transformedImage)
     }
 
+    res.send(transformedImage)
     next()
   }
+}
+
+/**
+ * Generate the name of the processed image. The name generated follows the
+ *  format: <imageName>,<operation>-<value>.<filetype>
+ * Example: image1,height-100,width-200.png
+ * @param originalName
+ * @param queryParams
+ * @returns
+ */
+function generateImageName(originalName: string, queryParams: QueryParams): string {
+  const newImageName = Object.entries(queryParams)
+    .sort((a: string[], b: string[]) => a[0].localeCompare(b[0]))
+    .reduce((acc, curr) => {
+      acc += `,${curr[0]}-${curr[1]}`
+      return acc
+    }, '')
+
+  return originalName.split('.')[0] + newImageName + path.extname(originalName)
 }

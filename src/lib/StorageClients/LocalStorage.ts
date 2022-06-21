@@ -1,13 +1,13 @@
-import path from "path"
-import StorageClient from "./StorageClient"
-import fs from "fs"
+import path from 'path'
+import StorageClient from './StorageClient'
+import fs from 'fs'
 
 interface ConfigType {
   destination: string
 }
 
 class StorageClientLocal implements StorageClient {
-  private destination: string = ''
+  private destination = ''
 
   constructor(config: ConfigType) {
     this.destination = config.destination
@@ -22,11 +22,17 @@ class StorageClientLocal implements StorageClient {
     return ''
   }
 
-  async getImage(imageName: string): Promise<Buffer> {
-    //const file = await fsPromises.readFile(image, { encoding: 'utf8' })
-    //const metadata = await sharp(file).metadata()
-    const imagePath = path.resolve(this.destination, imageName)
-    return fs.readFileSync(imagePath)
+  async getImage(id: string): Promise<Buffer> {
+    const imagePath = path.resolve(this.destination, id)
+    return fs.promises.readFile(imagePath)
+  }
+
+  async imageExists(id: string): Promise<boolean> {
+    const imagePath = path.resolve(this.destination, id)
+    return fs.promises.stat(imagePath).then(
+      () => true,
+      () => false,
+    )
   }
 }
 

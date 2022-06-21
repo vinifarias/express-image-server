@@ -1,4 +1,4 @@
-import StorageClient from "./StorageClient";
+import StorageClient from './StorageClient'
 
 import multerS3 from 'multer-s3'
 import aws from 'aws-sdk'
@@ -10,7 +10,11 @@ class StorageClientS3 implements StorageClient {
   }
 
   async getImage(id: string): Promise<Buffer> {
-    return Buffer.from('Testing');
+    return Buffer.from('Testing')
+  }
+
+  async imageExists(id: string): Promise<boolean> {
+    return true
   }
 }
 
