@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import path from 'path'
+import { generateNewImgName, normalizeQuery } from './helpers'
 
 import ImageTransformer from './ImageTransformer'
 import StorageClient from './StorageClients/StorageClient'
@@ -13,57 +14,45 @@ interface optsType {
   config: Record<string, string>
 }
 
-export function createMiddleware(opts: optsType) {
+export function queryImageMiddleware(opts: optsType) {
   return async function imageMiddleware(req: Request, res: Response, next: NextFunction) {
-    // Adapt to another image types
-    res.set('Content-Type', 'image/jpg')
+    try {
+      const queryParams: QueryParams = req.query as unknown as QueryParams
 
-    const queryParams: QueryParams = req.query as unknown as QueryParams
+      const imageName = req.params.id
 
-    const imageName = req.params.id
-    const newImageName = generateImageName(imageName, queryParams)
+      const normalizedQuery = normalizeQuery(queryParams)
+      const newImageName = generateNewImgName(imageName, normalizedQuery)
 
-    const imageTransformer = new ImageTransformer()
-    const storageClient = opts.storageClient
+      const imageTransformer = new ImageTransformer()
+      const storageClient = opts.storageClient
 
-    // Check if the processed image already exist in storage
-    if (await storageClient.imageExists(newImageName)) {
-      const image = await storageClient.getImage(newImageName)
-      res.send(image)
-      return
+      const imgFormat = path.extname(newImageName).split('.')[1]
+      res.set('Content-Type', `image/${imgFormat}`)
+
+      // Check if the processed image already exist in storage
+      if (await storageClient.imageExists(newImageName)) {
+        console.log('IMAGE EXISTS...')
+        const image = await storageClient.getImage(newImageName)
+        return res.status(200).send(image)
+      }
+
+      // Get the image from storage
+      const image = await storageClient.getImage(imageName)
+
+      // Process the image
+      const transformedImage = await imageTransformer.transform(image, normalizedQuery)
+
+      // Save the image
+      await storageClient.saveImage(newImageName, transformedImage)
+
+      return res.status(200).send(transformedImage)
     }
-
-    // Get the image from storage
-    const image = await storageClient.getImage(imageName)
-
-    // Process the image
-    const transformedImage = await imageTransformer.transform(image, queryParams)
-
-    // Save the image
-    if (transformedImage) {
-      storageClient.saveImage(newImageName, transformedImage)
+    catch (err) {
+      return next(err)
     }
-
-    res.send(transformedImage)
-    next()
+    finally {
+      return next()
+    }
   }
-}
-
-/**
- * Generate the name of the processed image. The name generated follows the
- *  format: <imageName>,<operation>-<value>.<filetype>
- * Example: image1,height-100,width-200.png
- * @param originalName
- * @param queryParams
- * @returns
- */
-function generateImageName(originalName: string, queryParams: QueryParams): string {
-  const newImageName = Object.entries(queryParams)
-    .sort((a: string[], b: string[]) => a[0].localeCompare(b[0]))
-    .reduce((acc, curr) => {
-      acc += `,${curr[0]}-${curr[1]}`
-      return acc
-    }, '')
-
-  return originalName.split('.')[0] + newImageName + path.extname(originalName)
 }

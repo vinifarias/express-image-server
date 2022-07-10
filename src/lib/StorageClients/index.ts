@@ -1,5 +1,5 @@
-import LocalStorage from './LocalStorage'
+import LocalStorage from './LocalStorageClient'
+import StorageClientS3 from './S3StorageClient'
 import StorageClient from './StorageClient'
-import StorageClientS3 from './StorageClientS3'
 
 export { LocalStorage, StorageClient, StorageClientS3 }

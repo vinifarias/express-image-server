@@ -1,5 +1,5 @@
 interface StorageClient {
-  saveImage: (imagePath: string, image: Buffer) => Promise<string>
+  saveImage: (imagePath: string, image: Buffer) => Promise<boolean>
   getImage: (id: string) => Promise<Buffer>
   imageExists: (id: string) => Promise<boolean>
 }
