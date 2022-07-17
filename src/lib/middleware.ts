@@ -3,8 +3,8 @@ import path from 'path'
 import { NextFunction, Request, Response } from 'express'
 
 import { generateFileName, normalizeQuery } from './helpers'
-import ImageTransformer from './ImageTransformer'
-import StorageClient from './storage-clients/StorageClient'
+import { ImageTransformer } from './image-transformer'
+import { StorageClient } from './storage-clients'
 
 interface QueryParams {
   height: number

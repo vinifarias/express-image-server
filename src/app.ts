@@ -4,7 +4,7 @@ import { config } from 'dotenv'
 import express, { NextFunction, Request, Response } from 'express'
 
 import { LocalStorageClient, queryImageMiddleware } from './lib'
-import { postMiddleware } from './lib/imageUploader'
+import { postMiddleware } from './lib/image-uploader'
 
 config()
 

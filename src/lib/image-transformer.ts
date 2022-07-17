@@ -26,4 +26,4 @@ class ImageTransformer {
   }
 }
 
-export default ImageTransformer
+export { ImageTransformer }
