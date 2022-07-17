@@ -1,4 +1,4 @@
-import { FormatEnum, ResizeOptions } from 'sharp'
+import { FormatEnum } from 'sharp'
 
 interface QueryParams {
   height?: number

@@ -5,17 +5,18 @@ import { QueryParams } from './types'
 class ImageTransformer {
   async transform(
     image: string | Buffer,
-    params: QueryParams,
+    options: QueryParams,
   ): Promise<Buffer> {
     try {
       const transformedImage = sharp(image)
 
-      if (params.width || params.height) {
-        transformedImage.resize(params.width, params.height)
-      }
+      transformedImage.resize(options.width, options.height, {
+        fit: 'inside',
+        withoutEnlargement: true,
+      })
 
-      if (params.format) {
-        transformedImage.toFormat(params.format)
+      if (options.format) {
+        transformedImage.toFormat(options.format)
       }
 
       return await transformedImage.toBuffer()

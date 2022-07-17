@@ -10,17 +10,17 @@ import { QueryParams, QueryParamsEnum } from './types'
  * @param queryParams
  * @returns
  */
-function generateNewImgName(
-  imgName: string,
+function generateFileName(
+  originalName: string,
   queryParams: QueryParams,
 ): string {
   const { format, ...operations } = queryParams
-  const imgFormat = format ? `.${format}` : path.extname(imgName)
+  const imgFormat = format ? `.${format}` : path.extname(originalName)
 
-  let newImgName = imgName.split('.')[0]
+  let newName = originalName.split('.')[0]
 
   // Concat operations and values in the name
-  newImgName += Object.entries(operations)
+  newName += Object.entries(operations)
     .sort((a: string[], b: string[]) => a[0].localeCompare(b[0]))
     .reduce((acc, curr) => {
       acc += `,${curr[0]}-${curr[1]}`
@@ -28,11 +28,11 @@ function generateNewImgName(
     }, '')
 
   // Add file format
-  newImgName += imgFormat
+  newName += imgFormat
 
-  console.log('IMAGE NAME: ', newImgName)
+  console.log('IMAGE NAME: ', newName)
 
-  return newImgName
+  return newName
 }
 
 function normalizeQuery(params: Record<string, any>): QueryParams {
@@ -56,4 +56,4 @@ function normalizeQuery(params: Record<string, any>): QueryParams {
   return normalizedParams
 }
 
-export { generateNewImgName, normalizeQuery }
+export { generateFileName, normalizeQuery }

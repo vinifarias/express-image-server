@@ -3,7 +3,8 @@ import path from 'path'
 import { config } from 'dotenv'
 import express, { NextFunction, Request, Response } from 'express'
 
-import { LocalStorage, queryImageMiddleware } from './lib'
+import { LocalStorageClient, queryImageMiddleware } from './lib'
+import { postMiddleware } from './lib/imageUploader'
 
 config()
 
@@ -14,11 +15,11 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
 })
 
 // Create storage client for the use in middleware
-const storageClient = new LocalStorage({
-  destination: path.resolve(__dirname, '..', 'images'),
+const storageClient = new LocalStorageClient({
+  dest: path.resolve(__dirname, '..', 'images'),
 })
 
-// Use of image middleware
+// Use of query image middleware
 app.get(
   '/images/:id',
   queryImageMiddleware({
@@ -26,6 +27,9 @@ app.get(
     config: {},
   }),
 )
+
+// Use of post image middleware
+app.post('/images', postMiddleware())
 
 const PORT = process.env.PORT || 3000
 
