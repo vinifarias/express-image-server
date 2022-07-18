@@ -4,14 +4,14 @@ import { NextFunction, Request, Response } from 'express'
 
 import { generateFileName, normalizeQuery } from './helpers'
 import { ImageTransformer } from './image-transformer'
-import { StorageClient } from './storage'
+import { Storage } from './storage'
 
 interface QueryParams {
   height: number
   width: number
 }
 interface OptionsType {
-  storage: StorageClient
+  storage: Storage
   config: Record<string, string>
 }
 
@@ -30,20 +30,20 @@ export function queryImageMiddleware(options: OptionsType) {
       const newImageName = generateFileName(imageName, normalizedQuery)
 
       const imageTransformer = new ImageTransformer()
-      const storageClient = options.storage
+      const storage = options.storage
 
       const imgFormat = path.extname(newImageName).split('.')[1]
       res.set('Content-Type', `image/${imgFormat}`)
 
       // Check if the processed image already exist in storage
-      if (await storageClient.exists(newImageName)) {
+      if (await storage.exists(newImageName)) {
         console.log('IMAGE EXISTS...')
-        const image = await storageClient.fetch(newImageName)
+        const image = await storage.fetch(newImageName)
         return res.status(200).send(image)
       }
 
       // Get the image from storage
-      const image = await storageClient.fetch(imageName)
+      const image = await storage.fetch(imageName)
 
       if (!image) {
         return res.status(500).json({ error: 'Image not found!' })
@@ -56,7 +56,7 @@ export function queryImageMiddleware(options: OptionsType) {
 
       // Save the image
       // Do it really need the 'await'? Or can be asynchronous?
-      await storageClient.save(newImageName, transformedImage)
+      await storage.save(newImageName, transformedImage)
 
       return res.status(200).send(transformedImage)
     } catch (err) {

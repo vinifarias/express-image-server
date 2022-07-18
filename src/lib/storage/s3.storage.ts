@@ -7,7 +7,7 @@ import { Upload } from '@aws-sdk/lib-storage'
 import multerS3 from 'multer-s3'
 
 import { extractOptions, generateFileName } from '../helpers'
-import { StorageClient } from './storage'
+import { Storage } from './storage'
 
 interface S3StorageOptions {
   bucketName: string
@@ -15,7 +15,7 @@ interface S3StorageOptions {
   secretAccessKey: string
 }
 
-class S3StorageClient implements StorageClient {
+class S3Storage implements Storage {
   private bucketName: string
   private s3Client: S3Client
 
@@ -112,11 +112,9 @@ class S3StorageClient implements StorageClient {
       contentType: multerS3.AUTO_CONTENT_TYPE,
       acl: 'public-read',
       key: async (req, file, cb) => {
-        const imageOptions = await extractOptions(file.buffer)
-        const filename = await generateFileName(file.originalname, imageOptions)
-        cb(null, filename)
+        cb(null, file.originalname)
       },
     })
   }
 }
-export { S3StorageClient }
+export { S3Storage }

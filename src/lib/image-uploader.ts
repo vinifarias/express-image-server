@@ -3,9 +3,9 @@ import multer from 'multer'
 
 import { multerConfig } from './multer'
 
-import { StorageClient } from '.'
+import { Storage } from './storage'
 interface OptionsType {
-  storage: StorageClient
+  storage: Storage
   config: Record<string, string>
 }
 
