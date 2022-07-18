@@ -10,12 +10,12 @@ interface QueryParams {
   height: number
   width: number
 }
-interface optsType {
-  storageClient: StorageClient
+interface OptionsType {
+  storage: StorageClient
   config: Record<string, string>
 }
 
-export function queryImageMiddleware(opts: optsType) {
+export function queryImageMiddleware(options: OptionsType) {
   return async function imageMiddleware(
     req: Request,
     res: Response,
@@ -30,7 +30,7 @@ export function queryImageMiddleware(opts: optsType) {
       const newImageName = generateFileName(imageName, normalizedQuery)
 
       const imageTransformer = new ImageTransformer()
-      const storageClient = opts.storageClient
+      const storageClient = options.storage
 
       const imgFormat = path.extname(newImageName).split('.')[1]
       res.set('Content-Type', `image/${imgFormat}`)
@@ -44,6 +44,10 @@ export function queryImageMiddleware(opts: optsType) {
 
       // Get the image from storage
       const image = await storageClient.fetch(imageName)
+
+      if (!image) {
+        return res.status(500).json({ error: 'Image not found!' })
+      }
 
       // Process the image
       const transformedImage = image

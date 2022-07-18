@@ -1,5 +1,7 @@
 import path from 'path'
 
+import sharp from 'sharp'
+
 import { QueryParams, QueryParamsEnum } from './types'
 
 /**
@@ -56,4 +58,13 @@ function normalizeQuery(params: Record<string, any>): QueryParams {
   return normalizedParams
 }
 
-export { generateFileName, normalizeQuery }
+async function extractOptions(file: Buffer): Promise<QueryParams> {
+  const metadata = await sharp(file).metadata()
+  return {
+    width: metadata.width,
+    height: metadata.height,
+    format: metadata.format,
+  }
+}
+
+export { generateFileName, normalizeQuery, extractOptions }

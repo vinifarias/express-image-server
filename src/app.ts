@@ -3,7 +3,11 @@ import path from 'path'
 import { config } from 'dotenv'
 import express, { NextFunction, Request, Response } from 'express'
 
-import { LocalStorageClient, queryImageMiddleware } from './lib'
+import {
+  LocalStorageClient,
+  S3StorageClient,
+  queryImageMiddleware,
+} from './lib'
 import { postMiddleware } from './lib/image-uploader'
 
 config()
@@ -14,22 +18,35 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
   res.send('Express server with TypeScript')
 })
 
-// Create storage client for the use in middleware
-const storageClient = new LocalStorageClient({
+// Create a local storage client
+const localStorageClient = new LocalStorageClient({
   dest: path.resolve(__dirname, '..', 'images'),
+})
+
+// Create a local storage client
+const s3StorageClient = new S3StorageClient({
+  accessKeyId: 'sdfdsf',
+  bucketName: 'sfsdf',
+  secretAccessKey: 'sdfsdf',
 })
 
 // Use of query image middleware
 app.get(
   '/images/:id',
   queryImageMiddleware({
-    storageClient,
+    storage: localStorageClient,
     config: {},
   }),
 )
 
 // Use of post image middleware
-app.post('/images', postMiddleware())
+app.post(
+  '/images',
+  postMiddleware({
+    storage: localStorageClient,
+    config: {},
+  }),
+)
 
 const PORT = process.env.PORT || 3000
 

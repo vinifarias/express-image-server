@@ -1,6 +1,9 @@
 import fs from 'fs'
 import path from 'path'
 
+import multer, { StorageEngine } from 'multer'
+
+import { extractOptions, generateFileName } from '../helpers'
 import { StorageClient } from './StorageClient'
 
 interface LocalStorageOptions {
@@ -39,6 +42,17 @@ class LocalStorageClient implements StorageClient {
       () => true,
       () => false,
     )
+  }
+
+  multerConfig(): StorageEngine {
+    return multer.diskStorage({
+      destination: path.resolve(this.dest),
+      filename: async (req, file, cb) => {
+        const imageOptions = await extractOptions(file.buffer)
+        const filename = await generateFileName(file.originalname, imageOptions)
+        cb(null, filename)
+      },
+    })
   }
 }
 
