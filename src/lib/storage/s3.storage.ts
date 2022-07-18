@@ -7,7 +7,7 @@ import { Upload } from '@aws-sdk/lib-storage'
 import multerS3 from 'multer-s3'
 
 import { extractOptions, generateFileName } from '../helpers'
-import { StorageClient } from './StorageClient'
+import { StorageClient } from './storage'
 
 interface S3StorageOptions {
   bucketName: string

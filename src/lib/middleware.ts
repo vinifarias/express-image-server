@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from 'express'
 
 import { generateFileName, normalizeQuery } from './helpers'
 import { ImageTransformer } from './image-transformer'
-import { StorageClient } from './storage-clients'
+import { StorageClient } from './storage'
 
 interface QueryParams {
   height: number

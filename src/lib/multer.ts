@@ -1,6 +1,6 @@
 import path from 'path'
 
-import { StorageClient } from './storage-clients'
+import { StorageClient } from './storage'
 
 const MAX_SIZE_TWO_MEGABYTES = 2 * 1024 * 1024
 

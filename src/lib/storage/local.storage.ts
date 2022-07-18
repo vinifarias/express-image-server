@@ -4,7 +4,7 @@ import path from 'path'
 import multer, { StorageEngine } from 'multer'
 
 import { extractOptions, generateFileName } from '../helpers'
-import { StorageClient } from './StorageClient'
+import { StorageClient } from './storage'
 
 interface LocalStorageOptions {
   dest: string
