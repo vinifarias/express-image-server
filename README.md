@@ -69,7 +69,7 @@ const app = express()
 app.get(
   '/images/:id',
   queryMiddleware({
-    storage: localStorage
+    storage: ...
   }),
 )
 
@@ -86,7 +86,13 @@ With this middleware the route will accept request with the following structure:
 GET   https://my-domain.com/path/images/image-name.png?height=720&width=1080&format=jpg
 ```
 
-That request will process the image `image-name.png` with the operations and will return as response `image-name.jpg` in `1080x720` dimensions. **Also, it will save in the storage an image `image-name,height-720,width-1080.jpg`**.
+That request will process the image `image-name.png` with the operations and will return as response `image-name.jpg` in `1080x720` dimension. **Also, it will save in the storage the image `image-name,height-720,width-1080.jpg`**.
+
+The following are the options that can be passed to `queryMiddleware`:
+| Key | Description | Note |
+| --- | --- | --- |
+| `storage` | Where to search and store the images | An `Storage` class |
+|  |  |
 
 **This middleware follows the algorithm:**
 1) Checks if the image processed with the operations asked already exist in the storage;
@@ -129,6 +135,12 @@ app.listen(3000)
 ```
 
 With this middleware the route will accept POST requests to save a *single* image at a time. To properly work, the request's body must be set as `form-data` and the image file must be sent in `file` parameter. **The image will be sent to the storage with the file's name.**
+
+The following are the options that can be passed to `uploadMiddleware`:
+| Key | Description | Note |
+| --- | --- | --- |
+| `storage` | Where to store the images | An `Storage` class |
+|  |  |
 
 > NOTE: This middleware requires that the storage class used has the `multerConfig` function, which will be used to config *multer* internally.
 
