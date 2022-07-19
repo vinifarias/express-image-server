@@ -160,6 +160,7 @@ Storages classes implements `Storage` interface and expose four functions:
 
 ### Disk Storage
 
+Searches and stores images in the hard disk.
 
 ```ts
 import path from 'path'
@@ -172,7 +173,7 @@ const diskStorage = new DiskStorage({
 })
 ```
 
-Searches and stores images in the hard disk.For the multer config uses [multer.DiskStorage](https://github.com/expressjs/multer#diskstorage) engine.
+For the multer config uses [multer.DiskStorage](https://github.com/expressjs/multer#diskstorage) engine.
 
 ### Amazon S3 Storage
 
