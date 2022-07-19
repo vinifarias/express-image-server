@@ -4,7 +4,7 @@ import { config } from 'dotenv'
 import express, { NextFunction, Request, Response } from 'express'
 
 import {
-  LocalStorage,
+  DiskStorage,
   S3Storage,
   queryImageMiddleware,
 } from './lib'
@@ -19,7 +19,7 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
 })
 
 // Create a local storage client
-const localStorage = new LocalStorage({
+const diskStorage = new DiskStorage({
   dest: path.resolve(__dirname, '..', 'images'),
 })
 
@@ -34,7 +34,7 @@ const localStorage = new LocalStorage({
 app.get(
   '/images/:id',
   queryImageMiddleware({
-    storage: localStorage,
+    storage: diskStorage,
     config: {},
   }),
 )
@@ -43,7 +43,7 @@ app.get(
 app.post(
   '/images',
   postMiddleware({
-    storage: localStorage,
+    storage: diskStorage,
     config: {},
   }),
 )

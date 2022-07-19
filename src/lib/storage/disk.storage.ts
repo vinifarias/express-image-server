@@ -6,14 +6,14 @@ import multer, { StorageEngine } from 'multer'
 import { extractOptions, generateFileName } from '../helpers'
 import { Storage } from './storage'
 
-interface LocalStorageOptions {
+interface DiskStorageOptions {
   dest: string
 }
 
-class LocalStorage implements Storage {
+class DiskStorage implements Storage {
   private dest = ''
 
-  constructor(options: LocalStorageOptions) {
+  constructor(options: DiskStorageOptions) {
     this.dest = options.dest
   }
 
@@ -54,4 +54,4 @@ class LocalStorage implements Storage {
   }
 }
 
-export { LocalStorage }
+export { DiskStorage }
