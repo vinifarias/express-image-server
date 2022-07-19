@@ -13,7 +13,6 @@
   - [Disk Storage](#disk-storage)
   - [Amazon S3](#amazon-s3)
   - [Custom storage](#custom-storage)
-- [](#)
 
 ## Installation
 
@@ -25,12 +24,12 @@ $ yarn add [lib-name]
 ```ts
 import path from 'path'
 import express from 'express'
-import { LocalStorage, queryMiddleware, uploadMiddleware } from '[lib-name]'
+import { DiskStorage, queryMiddleware, uploadMiddleware } from '[lib-name]'
 
 const app = express()
 
 // Create a local storage client, from where the images will be fetched and saved.
-const localStorage = new LocalStorage({
+const diskStorage = new DiskStorage({
   dest: path.resolve(__dirname, '..', 'images'),
 })
 
@@ -38,7 +37,7 @@ const localStorage = new LocalStorage({
 app.get(
   '/images/:id',
   queryMiddleware({
-    storage: localStorage
+    storage: diskStorage
   }),
 )
 
@@ -46,7 +45,7 @@ app.get(
 app.post(
   '/images',
   uploadMiddleware({
-    storage: localStorage,
+    storage: diskStorage,
   }),
 )
 
@@ -161,18 +160,22 @@ Storages classes implements `Storage` interface and expose four functions:
 
 ### Disk Storage
 
+Searches and stores images in the hard disk. For the multer config uses [multer.DiskStorage](https://github.com/expressjs/multer#diskstorage) engine.
+
 ```ts
 import path from 'path'
-import { localStorage } from '[lib-name]'
+import { DiskStorage } from '[lib-name]'
 
 const destination = path.resolve(__dirname, '..', 'images')
 
-const localStorage = new LocalStorage({
+const diskStorage = new DiskStorage({
   dest: destination,
 })
 ```
 
 ### Amazon S3
+
+Searches and stores images in Amazon S3. For the multer config uses [multerS3](https://github.com/anacronw/multer-s3) lib, that export an multer store engine for AWS S3.
 
 ```ts
 import { S3Storage } from '[lib-name]'
@@ -213,4 +216,4 @@ class MyCustomStorage implements Storage {
 }
 ```
 
-## 
+To implement your own `multer.StoreEngine` or to see the standard ones, please check the [multer's documentation](https://github.com/expressjs/multer#readme).
