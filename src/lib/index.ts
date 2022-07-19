@@ -1,2 +1,2 @@
-export * from './middleware'
-export * from './storage'
+export * from './middlewares'
+export * from './storages'

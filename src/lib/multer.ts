@@ -1,12 +1,10 @@
-import { Storage } from './storage'
+import { Storage } from './storages'
 
 const MAX_SIZE_TWO_MEGABYTES = 2 * 1024 * 1024
 
 function multerConfig(storage: Storage) {
   if (typeof storage.multerConfig !== 'function') {
-    throw new Error(
-      "Method 'multerConfig' does not exist in the storage used",
-    )
+    throw new Error("Method 'multerConfig' does not exist in the storage used")
   }
 
   return {

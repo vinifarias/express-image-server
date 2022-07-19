@@ -2,9 +2,9 @@ import path from 'path'
 
 import { NextFunction, Request, Response } from 'express'
 
-import { generateFileName, normalizeQuery } from './helpers'
-import { ImageTransformer } from './image-transformer'
-import { Storage } from './storage'
+import { generateFileName, normalizeQuery } from '../helpers'
+import { ImageTransformer } from '../image-transformer'
+import { Storage } from '../storages'
 
 interface QueryParams {
   height: number
@@ -15,7 +15,7 @@ interface OptionsType {
   config: Record<string, string>
 }
 
-export function queryImageMiddleware(options: OptionsType) {
+export function processMiddleware(options: OptionsType) {
   return async function imageMiddleware(
     req: Request,
     res: Response,

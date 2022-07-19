@@ -6,9 +6,9 @@ import express, { NextFunction, Request, Response } from 'express'
 import {
   DiskStorage,
   S3Storage,
-  queryImageMiddleware,
+  processMiddleware,
+  uploadMiddleware,
 } from './lib'
-import { postMiddleware } from './lib/image-uploader'
 
 config()
 
@@ -33,7 +33,7 @@ const diskStorage = new DiskStorage({
 // Use of query image middleware
 app.get(
   '/images/:id',
-  queryImageMiddleware({
+  processMiddleware({
     storage: diskStorage,
     config: {},
   }),
@@ -42,7 +42,7 @@ app.get(
 // Use of post image middleware
 app.post(
   '/images',
-  postMiddleware({
+  uploadMiddleware({
     storage: diskStorage,
     config: {},
   }),

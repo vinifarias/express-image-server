@@ -1,15 +1,15 @@
 import { NextFunction, Request, Response } from 'express'
 import multer from 'multer'
 
-import { multerConfig } from './multer'
+import { multerConfig } from '../multer'
+import { Storage } from '../storages'
 
-import { Storage } from './storage'
 interface OptionsType {
   storage: Storage
   config: Record<string, string>
 }
 
-export function postMiddleware(options: OptionsType) {
+export function uploadMiddleware(options: OptionsType) {
   const _func = async (req: Request, res: Response, next: NextFunction) => {
     if (req.file) {
       return res.status(200).json({
@@ -18,9 +18,7 @@ export function postMiddleware(options: OptionsType) {
     }
     console.log(req.file)
 
-    res.status(409)
-
-    return res.json({
+    return res.status(409).json({
       response: 'Invalid file format',
     })
   }
