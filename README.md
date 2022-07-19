@@ -6,13 +6,13 @@
 - [Installation](#installation)
 - [Basic usage](#basic-usage)
 - [Middlewares](#middlewares)
-  - [```queryMiddleware(options)```](#querymiddlewareoptions)
+  - [```processMiddleware(options)```](#processmiddlewareoptions)
     - [Avaible image operations](#avaible-image-operations)
   - [```uploadMiddleware(options)```](#uploadmiddlewareoptions)
 - [Storages](#storages)
   - [Disk Storage](#disk-storage)
-  - [Amazon S3](#amazon-s3)
-  - [Custom storage](#custom-storage)
+  - [Amazon S3 Storage](#amazon-s3-storage)
+  - [Custom Storage](#custom-storage)
 
 ## Installation
 
@@ -24,7 +24,7 @@ $ yarn add [lib-name]
 ```ts
 import path from 'path'
 import express from 'express'
-import { DiskStorage, queryMiddleware, uploadMiddleware } from '[lib-name]'
+import { DiskStorage, processMiddleware, uploadMiddleware } from '[lib-name]'
 
 const app = express()
 
@@ -36,7 +36,7 @@ const diskStorage = new DiskStorage({
 // Set the processing image middleware
 app.get(
   '/images/:id',
-  queryMiddleware({
+  processMiddleware({
     storage: diskStorage
   }),
 )
@@ -54,20 +54,20 @@ app.listen(3000)
 
 ## Middlewares
 
-### ```queryMiddleware(options)```
+### ```processMiddleware(options)```
 
 This middleware is used for search and process images. For processing and transforming images it uses [sharp](https://sharp.pixelplumbing.com/).
 
 Example:
 
 ```ts
-import { queryMiddleware } from '[lib-name]'
+import { processMiddleware } from '[lib-name]'
 
 const app = express()
 
 app.get(
   '/images/:id',
-  queryMiddleware({
+  processMiddleware({
     storage: ...
   }),
 )
@@ -87,11 +87,11 @@ GET   https://my-domain.com/path/images/image-name.png?height=720&width=1080&for
 
 That request will process the image `image-name.png` with the operations and will return as response `image-name.jpg` in `1080x720` dimension. **Also, it will save in the storage the image `image-name,height-720,width-1080.jpg`**.
 
-The following are the options that can be passed to `queryMiddleware`:
-| Key | Description | Note |
-| --- | --- | --- |
+The following are the options that can be passed to `processMiddleware`:
+| Key       | Description                          | Note               |
+| --------- | ------------------------------------ | ------------------ |
 | `storage` | Where to search and store the images | An `Storage` class |
-|  |  |
+|           |                                      |
 
 **This middleware follows the algorithm:**
 1) Checks if the image processed with the operations asked already exist in the storage;
@@ -136,10 +136,10 @@ app.listen(3000)
 With this middleware the route will accept POST requests to save a *single* image at a time. To properly work, the request's body must be set as `form-data` and the image file must be sent in `file` parameter. **The image will be sent to the storage with the file's name.**
 
 The following are the options that can be passed to `uploadMiddleware`:
-| Key | Description | Note |
-| --- | --- | --- |
+| Key       | Description               | Note               |
+| --------- | ------------------------- | ------------------ |
 | `storage` | Where to store the images | An `Storage` class |
-|  |  |
+|           |                           |
 
 > NOTE: This middleware requires that the storage class used has the `multerConfig` function, which will be used to config *multer* internally.
 
@@ -160,7 +160,6 @@ Storages classes implements `Storage` interface and expose four functions:
 
 ### Disk Storage
 
-Searches and stores images in the hard disk. For the multer config uses [multer.DiskStorage](https://github.com/expressjs/multer#diskstorage) engine.
 
 ```ts
 import path from 'path'
@@ -173,9 +172,11 @@ const diskStorage = new DiskStorage({
 })
 ```
 
-### Amazon S3
+Searches and stores images in the hard disk.For the multer config uses [multer.DiskStorage](https://github.com/expressjs/multer#diskstorage) engine.
 
-Searches and stores images in Amazon S3. For the multer config uses [multerS3](https://github.com/anacronw/multer-s3) lib, that export an multer store engine for AWS S3.
+### Amazon S3 Storage
+
+Searches and stores images in Amazon S3.
 
 ```ts
 import { S3Storage } from '[lib-name]'
@@ -187,7 +188,9 @@ const s3Storage = new S3Storage({
 })
 ```
 
-### Custom storage
+For the multer config uses [multerS3](https://github.com/anacronw/multer-s3) lib, that export an multer store engine for AWS S3.
+
+### Custom Storage
 You can create your own custom storage class. You just have to define a class that implements the `Storage` interface. Check the example:
 
 ```ts
