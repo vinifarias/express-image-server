@@ -3,7 +3,6 @@ import path from 'path'
 
 import multer, { StorageEngine } from 'multer'
 
-import { extractOptions, generateFileName } from '../helpers'
 import { Storage } from './storage'
 
 interface DiskStorageOptions {
@@ -44,7 +43,7 @@ class DiskStorage implements Storage {
     )
   }
 
-  multerConfig(): StorageEngine {
+  getMulterStorage(): StorageEngine {
     return multer.diskStorage({
       destination: path.resolve(this.dest),
       filename: async (req, file, cb) => {

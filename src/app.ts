@@ -28,7 +28,7 @@ const s3Storage = new S3Storage({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
   bucketName: process.env.BUCKET_NAME!,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-  region: process.env.AWS_DEFAULT_REGION!
+  region: process.env.AWS_DEFAULT_REGION!,
 })
 
 // Use of query image middleware

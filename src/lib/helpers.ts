@@ -56,13 +56,4 @@ function normalizeQuery(params: Record<string, any>): QueryParams {
   return normalizedParams
 }
 
-async function extractOptions(file: Buffer): Promise<QueryParams> {
-  const metadata = await sharp(file).metadata()
-  return {
-    width: metadata.width,
-    height: metadata.height,
-    format: metadata.format,
-  }
-}
-
-export { generateFileName, normalizeQuery, extractOptions }
+export { generateFileName, normalizeQuery }

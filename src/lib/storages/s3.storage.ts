@@ -1,11 +1,13 @@
+import { Readable } from 'node:stream'
+
 import {
   GetObjectCommand,
   HeadObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3'
 import { Upload } from '@aws-sdk/lib-storage'
+import { StorageEngine } from 'multer'
 import multerS3 from 'multer-s3'
-import { Readable } from 'node:stream'
 
 import { Storage } from './storage'
 
@@ -66,7 +68,7 @@ class S3Storage implements Storage {
 
       return new Promise<Buffer>((resolve, reject) => {
         const chunks: Buffer[] = []
-        stream.on('data', chunk => chunks.push(chunk))
+        stream.on('data', (chunk) => chunks.push(chunk))
         stream.once('end', () => resolve(Buffer.concat(chunks)))
         stream.once('error', reject)
       })
@@ -93,7 +95,7 @@ class S3Storage implements Storage {
     return response
   }
 
-  multerConfig() {
+  getMulterStorage(): StorageEngine {
     return multerS3({
       s3: this.s3Client,
       bucket: this.bucketName,
