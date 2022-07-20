@@ -18,23 +18,24 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
   res.send('Express server with TypeScript')
 })
 
-// Create a local storage client
+// Create a disk storage client
 const diskStorage = new DiskStorage({
   dest: path.resolve(__dirname, '..', 'images'),
 })
 
-// Create a local storage client
-/*const s3Storage = new S3Storage({
-  accessKeyId: 'sdfdsf',
-  bucketName: 'sfsdf',
-  secretAccessKey: 'sdfsdf',
-})*/
+// Create a AWS S3 storage client
+const s3Storage = new S3Storage({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+  bucketName: process.env.BUCKET_NAME!,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  region: process.env.AWS_DEFAULT_REGION!
+})
 
 // Use of query image middleware
 app.get(
   '/images/:id',
   processMiddleware({
-    storage: diskStorage,
+    storage: s3Storage,
     config: {},
   }),
 )
@@ -43,7 +44,7 @@ app.get(
 app.post(
   '/images',
   uploadMiddleware({
-    storage: diskStorage,
+    storage: s3Storage,
     config: {},
   }),
 )

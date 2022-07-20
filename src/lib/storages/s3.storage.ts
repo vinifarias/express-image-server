@@ -5,11 +5,12 @@ import {
 } from '@aws-sdk/client-s3'
 import { Upload } from '@aws-sdk/lib-storage'
 import multerS3 from 'multer-s3'
+import { Readable } from 'node:stream'
 
-import { extractOptions, generateFileName } from '../helpers'
 import { Storage } from './storage'
 
 interface S3StorageOptions {
+  region: string
   bucketName: string
   accessKeyId: string
   secretAccessKey: string
@@ -24,6 +25,7 @@ class S3Storage implements Storage {
     this.s3Client = new S3Client({
       // apiVersion: '2006-03-01',
       // region: 'us-west-2',
+      region: options.region,
       credentials: {
         accessKeyId: options.accessKeyId,
         secretAccessKey: options.secretAccessKey,
@@ -37,13 +39,6 @@ class S3Storage implements Storage {
         Key: id,
         Bucket: this.bucketName,
         Body: image,
-        /*ACL: opts.acl,
-        CacheControl: opts.cacheControl,
-        ContentType: opts.contentType,
-        Metadata: opts.metadata,
-        StorageClass: opts.storageClass,
-        ServerSideEncryption: opts.serverSideEncryption,
-        SSEKMSKeyId: opts.sseKmsKeyId,*/
       }
 
       const upload = new Upload({
@@ -51,16 +46,11 @@ class S3Storage implements Storage {
         params: params,
       })
 
-      upload.on('httpUploadProgress', (progress) => {
-        console.log(progress)
-      })
-
       await upload.done()
+      return true
     } catch (err) {
-      console.log(err)
+      return false
     }
-
-    return false
   }
 
   async fetch(id: string): Promise<Buffer | undefined> {
@@ -72,13 +62,14 @@ class S3Storage implements Storage {
 
       const response = await this.s3Client.send(new GetObjectCommand(params))
 
-      const stream = response.Body
+      const stream = response.Body as Readable
 
-      if (!Buffer.isBuffer(stream)) {
-        return undefined
-      }
-
-      return stream
+      return new Promise<Buffer>((resolve, reject) => {
+        const chunks: Buffer[] = []
+        stream.on('data', chunk => chunks.push(chunk))
+        stream.once('end', () => resolve(Buffer.concat(chunks)))
+        stream.once('error', reject)
+      })
     } catch (err) {
       return undefined
     }
@@ -95,10 +86,7 @@ class S3Storage implements Storage {
       .then(
         () => true,
         (err) => {
-          if (err.code === 'NotFound') {
-            return false
-          }
-          throw err
+          return false
         },
       )
 

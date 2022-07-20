@@ -32,8 +32,6 @@ function generateFileName(
   // Add file format
   newName += imgFormat
 
-  console.log('IMAGE NAME: ', newName)
-
   return newName
 }
 

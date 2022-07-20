@@ -37,7 +37,6 @@ export function processMiddleware(options: OptionsType) {
 
       // Check if the processed image already exist in storage
       if (await storage.exists(newImageName)) {
-        console.log('IMAGE EXISTS...')
         const image = await storage.fetch(newImageName)
         return res.status(200).send(image)
       }

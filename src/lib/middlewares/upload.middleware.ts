@@ -16,7 +16,6 @@ export function uploadMiddleware(options: OptionsType) {
         response: req.file,
       })
     }
-    console.log(req.file)
 
     return res.status(409).json({
       response: 'Invalid file format',

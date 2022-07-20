@@ -186,6 +186,7 @@ const s3Storage = new S3Storage({
   bucketName: 'bucket-name',
   accessKeyId: 'access-key-id',
   secretAccessKey: 'secret-access-key',
+  region: 'region'
 })
 ```
 
