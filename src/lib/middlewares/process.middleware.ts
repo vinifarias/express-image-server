@@ -4,64 +4,68 @@ import { NextFunction, Request, Response } from 'express'
 
 import { generateFileName, normalizeQuery } from '../helpers'
 import { ImageTransformer } from '../image-transformer'
-import { Storage } from '../storages'
+import { QueryParams, Storage } from '../types'
 
-interface QueryParams {
-  height: number
-  width: number
-}
 interface OptionsType {
   storage: Storage
   config: Record<string, string>
 }
 
 export function processMiddleware(options: OptionsType) {
-  return async function imageMiddleware(
+  return async function (
     req: Request,
     res: Response,
     next: NextFunction,
   ) {
     try {
       const queryParams: QueryParams = req.query as unknown as QueryParams
-
-      const imageName = req.params.id
+      const imgName = req.params.id
 
       const normalizedQuery = normalizeQuery(queryParams)
-      const newImageName = generateFileName(imageName, normalizedQuery)
+      const newImgName = generateFileName(imgName, normalizedQuery)
+      const newImgFormat = path.extname(newImgName).split('.')[1]
 
-      const imageTransformer = new ImageTransformer()
       const storage = options.storage
 
-      const imgFormat = path.extname(newImageName).split('.')[1]
-      res.set('Content-Type', `image/${imgFormat}`)
-
       // Check if the processed image already exist in storage
-      if (await storage.exists(newImageName)) {
-        const image = await storage.fetch(newImageName)
-        return res.status(200).send(image)
+      if (await storage.exists(newImgName)) {
+        const image = await storage.fetch(newImgName)
+
+        if (!image) return errorResponse(res, 'Error fetching processed image.')
+
+        return successResponse(res, image, newImgFormat)
       }
 
       // Get the image from storage
-      const image = await storage.fetch(imageName)
+      const image = await storage.fetch(imgName)
 
       if (!image) {
-        return res.status(500).json({ error: 'Image not found!' })
+        return errorResponse(res, 'Image not found.')
       }
 
       // Process the image
-      const transformedImage = image
-        ? await imageTransformer.transform(image, normalizedQuery)
-        : Buffer.from('test')
+      const transformedImage = await new ImageTransformer().transform(
+        image,
+        normalizedQuery,
+      )
 
       // Save the image
-      // Do it really need the 'await'? Or can be asynchronous?
-      await storage.save(newImageName, transformedImage)
+      storage.save(newImgName, transformedImage)
 
-      return res.status(200).send(transformedImage)
+      return successResponse(res, transformedImage, newImgFormat)
     } catch (err) {
-      return next(err)
+      next(err)
     } finally {
-      return next()
+      next()
     }
   }
+}
+
+function successResponse(res: Response, file: Buffer, format: string) {
+  res.set('Content-Type', `image/${format}`)
+  return res.status(200).send(file)
+}
+
+function errorResponse(res: Response, message: string) {
+  return res.status(500).json({ error: message })
 }

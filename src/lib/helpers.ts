@@ -1,6 +1,6 @@
 import path from 'path'
 
-import sharp from 'sharp'
+import { Response } from 'express'
 
 import { QueryParams, QueryParamsEnum } from './types'
 

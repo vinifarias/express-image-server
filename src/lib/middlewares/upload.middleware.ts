@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import multer from 'multer'
 
 import { multerConfig } from '../multer'
-import { Storage } from '../storages'
+import { Storage } from '../types'
 
 interface OptionsType {
   storage: Storage
@@ -21,5 +21,6 @@ export function uploadMiddleware(options: OptionsType) {
       response: 'Invalid file format',
     })
   }
+
   return [multer(multerConfig(options.storage)).single('file'), _func]
 }

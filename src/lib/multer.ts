@@ -1,7 +1,6 @@
 import { Options } from 'multer'
 
-import { Storage } from './storages'
-import { FormatEnum } from './types'
+import { FormatEnum, Storage } from './types'
 
 function multerConfig(storage: Storage): Options {
   if (typeof storage.getMulterStorage !== 'function') {

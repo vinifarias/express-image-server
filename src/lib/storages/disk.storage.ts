@@ -3,11 +3,7 @@ import path from 'path'
 
 import multer, { StorageEngine } from 'multer'
 
-import { Storage } from './storage'
-
-interface DiskStorageOptions {
-  dest: string
-}
+import { DiskStorageOptions, Storage } from '../types'
 
 class DiskStorage implements Storage {
   private dest = ''

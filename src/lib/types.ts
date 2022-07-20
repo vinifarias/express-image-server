@@ -1,6 +1,7 @@
+import { StorageEngine } from 'multer'
 import sharp from 'sharp'
 
-enum FormatEnum {
+export enum FormatEnum {
   heic = 'heic',
   heif = 'heif',
   avif = 'avif',
@@ -18,16 +19,32 @@ enum FormatEnum {
   j2c = 'j2c',
 }
 
-enum QueryParamsEnum {
+export enum QueryParamsEnum {
   height = 'height',
   width = 'width',
   format = 'format',
 }
 
-interface QueryParams {
+export interface QueryParams {
   height?: number
   width?: number
   format?: keyof sharp.FormatEnum
 }
 
-export { QueryParams, QueryParamsEnum, FormatEnum }
+export interface S3StorageOptions {
+  region: string
+  bucketName: string
+  accessKeyId: string
+  secretAccessKey: string
+}
+
+export interface DiskStorageOptions {
+  dest: string
+}
+
+export interface Storage {
+  save: (id: string, image: Buffer) => Promise<boolean>
+  fetch: (id: string) => Promise<Buffer | undefined>
+  exists: (id: string) => Promise<boolean>
+  getMulterStorage?: () => StorageEngine
+}

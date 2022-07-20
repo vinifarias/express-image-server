@@ -9,14 +9,7 @@ import { Upload } from '@aws-sdk/lib-storage'
 import { StorageEngine } from 'multer'
 import multerS3 from 'multer-s3'
 
-import { Storage } from './storage'
-
-interface S3StorageOptions {
-  region: string
-  bucketName: string
-  accessKeyId: string
-  secretAccessKey: string
-}
+import { S3StorageOptions, Storage } from '../types'
 
 class S3Storage implements Storage {
   private bucketName: string
