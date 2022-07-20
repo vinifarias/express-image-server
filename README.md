@@ -141,7 +141,7 @@ The following are the options that can be passed to `uploadMiddleware`:
 | `storage` | Where to store the images | An `Storage` class |
 |           |                           |
 
-> NOTE: This middleware requires that the storage class used has the `multerConfig` function, which will be used to config *multer* internally.
+> NOTE: This middleware requires that the storage class used has the `getMulterStorage` function, which will be used to config *multer* internally.
 
 ## Storages
 
@@ -152,9 +152,9 @@ Storages classes implements `Storage` interface and expose four functions:
 - `save: (id: string, image: Buffer) => Promise<boolean>`
 - `fetch: (id: string) => Promise<Buffer | undefined>`
 - `exists: (id: string) => Promise<boolean>`
-- `multerConfig?: () => multer.StorageEngine`
+- `getMulterStorage?: () => multer.StorageEngine`
 
-> **NOTE:** `multerConfig` function is set as optional, but it is **mandatory** when using `uploadMiddleware`. This happens because this function returns the multer config used by `uploadMiddleware`.
+> **NOTE:** `getMulterStorage` function is set as optional, but it is **mandatory** when using `uploadMiddleware`. This happens because this function returns the multer config used by `uploadMiddleware`.
 
 [lib-name] provides two default storages: Disk Storage and Amazon S3 Storage.
 
@@ -215,7 +215,7 @@ class MyCustomStorage implements Storage {
     ...
   }
 
-  multerConfig(): StorageEngine {
+  getMulterStorage(): StorageEngine {
     ...
   }
 }
