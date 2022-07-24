@@ -154,7 +154,7 @@ Storages classes implements `Storage` interface and expose four functions:
 - `exists: (id: string) => Promise<boolean>`
 - `getMulterStorage?: () => multer.StorageEngine`
 
-> **NOTE:** `getMulterStorage` function is set as optional, but it is **mandatory** when using `uploadMiddleware`. This happens because this function returns the multer config used by `uploadMiddleware`.
+> **NOTE:** `getMulterStorage` function is set as optional, but it is **mandatory** when using `uploadMiddleware`. This happens because this function returns the multer storage config used by that middleware.
 
 [lib-name] provides two default storages: Disk Storage and Amazon S3 Storage.
 

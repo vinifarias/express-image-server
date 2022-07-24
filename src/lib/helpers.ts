@@ -1,7 +1,5 @@
 import path from 'path'
 
-import { Response } from 'express'
-
 import { QueryParams, QueryParamsEnum } from './types'
 
 /**
