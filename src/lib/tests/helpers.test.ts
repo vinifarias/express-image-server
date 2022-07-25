@@ -35,7 +35,7 @@ describe('Test generateFileName', () => {
 })
 
 describe('Test normalizeQuery', () => {
-  it('Should remove not expected params', async () => {
+  it('Should remove not expected params', () => {
     const options = {
       height: 100,
       width: 100,

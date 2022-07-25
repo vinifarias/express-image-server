@@ -8,7 +8,7 @@ describe('ImageTransformer tests', () => {
     jest.clearAllMocks()
   })
 
-  it('Should perform all sharp operations expected', async () => {
+  it('Should perform all sharp operations expected', () => {
     const options: QueryParams = {
       height: 100,
       width: 100,
@@ -26,7 +26,7 @@ describe('ImageTransformer tests', () => {
     expect(sharp().toBuffer).toBeCalledTimes(1)
   })
 
-  it('Should not perform sharp toFormat when format is not passed', async () => {
+  it('Should not perform sharp toFormat when format is not passed', () => {
     const options: QueryParams = {
       height: 100,
       width: 100,
