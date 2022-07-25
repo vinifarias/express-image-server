@@ -39,7 +39,7 @@ function normalizeQuery(params: Record<string, any>): QueryParams {
     Object.entries(params).filter(([attr, _]) => attr in QueryParamsEnum),
   )
 
-  if (Number.isNaN(normalizedParams.width)) {
+  if (isNaN(normalizedParams.width) || isNaN(normalizedParams.height)) {
     throw new Error('Erro normalizing query!')
   }
 

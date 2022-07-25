@@ -12,11 +12,7 @@ interface OptionsType {
 }
 
 export function processMiddleware(options: OptionsType) {
-  return async function (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) {
+  return async function (req: Request, res: Response, next: NextFunction) {
     try {
       const queryParams: QueryParams = req.query as unknown as QueryParams
       const imgName = req.params.id
