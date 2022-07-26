@@ -18,8 +18,6 @@ class S3Storage implements Storage {
   constructor(options: S3StorageOptions) {
     this.bucketName = options.bucketName
     this.s3Client = new S3Client({
-      // apiVersion: '2006-03-01',
-      // region: 'us-west-2',
       region: options.region,
       credentials: {
         accessKeyId: options.accessKeyId,
