@@ -10,15 +10,17 @@ class ImageTransformer {
     try {
       const transformedImage = sharp(image)
 
-      transformedImage.resize(options.width, options.height, {
-        fit: 'inside',
-        withoutEnlargement: true,
+      await transformedImage.resize(options.width, options.height, {
+        fit: 'cover',
+        //withoutEnlargement: true,
       })
 
       if (options.format) {
-        transformedImage.toFormat(options.format)
+        await transformedImage.toFormat(options.format, {
+          quality: 100,
+          progressive: true,
+        })
       }
-
       return await transformedImage.toBuffer()
     } catch (err) {
       throw new Error(`An error occurred during transforming the image: ${err}`)
