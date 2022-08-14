@@ -21,7 +21,7 @@ app.get('/', (req: Request, res: Response) => {
 // Create a disk storage client
 
 const diskStorage = new DiskStorage({
-  dest: path.resolve(__dirname, '..', 'images', 'samples'),
+  dest: path.resolve(__dirname, '..', 'storage'),
 })
 
 // Create a AWS S3 storage client
