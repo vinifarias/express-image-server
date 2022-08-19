@@ -13,6 +13,7 @@ express-image-server is a node.js middleware for creating image servers. It prov
   - [Disk Storage](#disk-storage)
   - [Amazon S3 Storage](#amazon-s3-storage)
   - [Custom Storage](#custom-storage)
+- [License](#license)
 
 ## Installation
 
@@ -222,3 +223,7 @@ class MyCustomStorage implements Storage {
 ```
 
 To implement your own `multer.StoreEngine` or to see the standard ones, please check the [multer's documentation](https://github.com/expressjs/multer#readme).
+
+## License
+
+[MIT](LICENSE)
