@@ -1,6 +1,6 @@
 {
   "name": "express-image-server",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A Node.js middleware for creating image servers",
   "author": "Vinicius Farias <vinifarias.vf@gmail.com>",
   "license": "MIT",
