@@ -1,5 +1,5 @@
-# [lib-name] <!-- omit in toc -->
-[lib-name] is a node.js middleware for creating image servers. It provides middlewares for search, process and upload images in real time. For processing images the lib uses [sharp](https://sharp.pixelplumbing.com/), a high performance image processor for Node.js applications. And for uploading images it uses [multer](https://github.com/expressjs/multer).
+# express-image-server <!-- omit in toc -->
+express-image-server is a node.js middleware for creating image servers. It provides middlewares for search, process and upload images in real time. For processing images the lib uses [sharp](https://sharp.pixelplumbing.com/), a high performance image processor for Node.js applications. And for uploading images it uses [multer](https://github.com/expressjs/multer).
 
 ## Table of contents <!-- omit in toc -->
 
@@ -17,14 +17,14 @@
 ## Installation
 
 ```sh
-$ yarn add [lib-name]
+$ yarn add express-image-server
 ```
 ## Basic usage
 
 ```ts
 import path from 'path'
 import express from 'express'
-import { DiskStorage, processMiddleware, uploadMiddleware } from '[lib-name]'
+import { DiskStorage, processMiddleware, uploadMiddleware } from 'express-image-server'
 
 const app = express()
 
@@ -61,7 +61,7 @@ This middleware is used for search and process images. For processing and transf
 Example:
 
 ```ts
-import { processMiddleware } from '[lib-name]'
+import { processMiddleware } from 'express-image-server'
 
 const app = express()
 
@@ -110,7 +110,7 @@ The following are the options that can be passed to `processMiddleware`:
 | ---------------- | ----------------------------------------------------------------- |
 | width            | Output image's width                                              |
 | height           | Output image's height                                             |
-| format           | Output image format. Valid values: `jpeg`, `jpg`, `png` or `webp` |
+| format           | Output image format
 
 ### ```uploadMiddleware(options)```
 
@@ -119,7 +119,7 @@ This middleware is used for uploading images direct to the storage and it is bui
 Example:
 
 ```ts
-import { uploadMiddleware } from '[lib-name]'
+import { uploadMiddleware } from 'express-image-server'
 
 const app = express()
 
@@ -156,7 +156,7 @@ Storages classes implements `Storage` interface and expose four functions:
 
 > **NOTE:** `getMulterStorage` function is set as optional, but it is **mandatory** when using `uploadMiddleware`. This happens because this function returns the multer storage config used by that middleware.
 
-[lib-name] provides two default storages: Disk Storage and Amazon S3 Storage.
+express-image-server provides two default storages: Disk Storage and Amazon S3 Storage.
 
 ### Disk Storage
 
@@ -164,7 +164,7 @@ Searches and stores images in the hard disk.
 
 ```ts
 import path from 'path'
-import { DiskStorage } from '[lib-name]'
+import { DiskStorage } from 'express-image-server'
 
 const destination = path.resolve(__dirname, '..', 'images')
 
@@ -180,7 +180,7 @@ For the multer config uses [multer.DiskStorage](https://github.com/expressjs/mul
 Searches and stores images in Amazon S3.
 
 ```ts
-import { S3Storage } from '[lib-name]'
+import { S3Storage } from 'express-image-server'
 
 const s3Storage = new S3Storage({
   bucketName: 'bucket-name',
@@ -196,7 +196,7 @@ For the multer config uses [multerS3](https://github.com/anacronw/multer-s3) lib
 You can create your own custom storage class. You just have to define a class that implements the `Storage` interface. Check the example:
 
 ```ts
-import { Storage } from '[lib-name]'
+import { Storage } from 'express-image-server'
 
 class MyCustomStorage implements Storage {
   constructor(/*{...your options}*/) {

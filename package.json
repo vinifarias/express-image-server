@@ -1,21 +1,26 @@
 {
-  "name": "test-node-ts-project",
+  "name": "express-image-server",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A Node.js middleware for creating image servers",
+  "author": "Vinicius Farias <vinifarias.vf@gmail.com>",
+  "license": "MIT",
+  "repository": "git@github.com:vinifarias/express-image-server.git",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "keywords": [
+    "image",
+    "express",
+    "sharp"
+  ],
   "scripts": {
     "build": "npx tsc",
-    "dev": "nodemon ./src/app.ts",
-    "start": "npx tsc & node ./dist/app.js",
+    "start": "npx tsc & node ./dist/index.js",
     "lint": "eslint src/**/*.{js,jsx,ts,tsx,json}",
     "lint:fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx,json}'",
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
     "test": "jest",
-    "test:perf": "artillery run src/lib/perf-tests/*.yml"
+    "test:perf": "artillery run src/perf-tests/*.yml"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.145.0",
     "aws-sdk": "^2.1157.0",
@@ -41,7 +46,6 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
     "jest": "^28.1.3",
-    "nodemon": "^2.0.16",
     "prettier": "^2.7.1",
     "ts-jest": "^28.0.7",
     "ts-node": "^10.8.0",
