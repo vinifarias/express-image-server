@@ -1,10 +1,14 @@
 {
   "name": "express-image-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Node.js middleware for creating image servers",
   "author": "Vinicius Farias <vinifarias.vf@gmail.com>",
   "license": "MIT",
-  "repository": "git@github.com:vinifarias/express-image-server.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vinifarias/express-image-server.git"
+  },
+  "homepage": "https://github.com/vinifarias/express-image-server#readme",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "keywords": [
