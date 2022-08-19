@@ -41,7 +41,7 @@ export function normalizeQuery(params: Record<string, any>): QueryParams {
 
   if (
     (normalizedParams.width && isNaN(normalizedParams.width)) ||
-    (normalizedParams.width && isNaN(normalizedParams.height))
+    (normalizedParams.height && isNaN(normalizedParams.height))
   ) {
     throw new Error('Erro normalizing query!')
   }
