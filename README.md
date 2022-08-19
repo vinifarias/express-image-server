@@ -107,11 +107,11 @@ The following are the options that can be passed to `processMiddleware`:
 
 #### Avaible image operations
 
-| Query param name | Description                                                       |
-| ---------------- | ----------------------------------------------------------------- |
-| width            | Output image's width                                              |
-| height           | Output image's height                                             |
-| format           | Output image format
+| Query param name | Description           |
+| ---------------- | --------------------- |
+| width            | Output image's width  |
+| height           | Output image's height |
+| format           | Output image format   |
 
 ### ```uploadMiddleware(options)```
 
@@ -226,4 +226,4 @@ To implement your own `multer.StoreEngine` or to see the standard ones, please c
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE.md)
